@@ -1,0 +1,233 @@
+\documentclass[11pt]{article} % this tells LaTeX to make an article (as opposed to a book, for example)
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\definecolor{dark_green}{HTML}{008000}
+
+\usepackage{fancyhdr}
+\usepackage{fixmath}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikzscale}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage[left=1in,
+        right=1in,
+        top=1in,
+        bottom=1in,
+        includefoot, heightrounded]{geometry}
+\usepackage{microtype}
+
+\DeclareMathOperator{\image}{Im}
+\DeclareMathOperator{\aut}{Aut}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{}
+\lhead{Lecture 7 Proofs}
+\cfoot{\thepage}
+
+
+\usepackage{hyperref}
+
+\usepackage[norsk,capitalise,nameinlink,english]{cleveref}
+
+\theoremstyle{plain}
+\newtheorem{game}{Game}
+\newtheorem{subgame}{Game}[game] 
+\renewcommand{\thesubgame}{\thegame\Alph{subgame}} 
+\newtheorem{definition}{Definition}[section]
+\newtheorem{examplex}{Example}
+\newenvironment{example}
+  {\pushQED{\qed}\renewcommand{\qedsymbol}{$\CIRCLE$}\examplex}
+  {\popQED\endexamplex}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{corollary}[thm]{Corollary}
+
+\crefname{thm}{Theorem}{Theorems}
+\Crefname{thm}{Theorem}{Theorems}
+
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\N}{\mathbf{N}}
+
+
+\begin{document}
+
+\section*{Improper Integral}
+
+\textbf{Cauchy's Criterion Proof.}
+
+\begin{proof}
+$\implies:$ Assume the improper integral converges such that 
+\[\lim_{c\to b}\int_a^c f(x)\ \mathrm{d}x = \int_a^b f(x)\ \mathrm{d}x \in \R.\]
+We'll show that it's Cauchy. Take $\varepsilon>0$, then there exists $r\in(a,b)$ such that, for all $c\in(r,b)$, we have
+\[\left|\int_a^c f(x)\ \mathrm{d}x- \int_a^b f(x) \mathrm{d}x\right|<\frac{\varepsilon}{2}.\]
+Now, take $p,q\in(r,b)$ such that $p<q$, we then have
+\begin{align*}
+\left|\int_p^q f(x)\ \mathrm{d}x\right| & = \left|\int_a^q f(x)\ \mathrm{d}x- \int_a^p f(x) \mathrm{d}x\right| \\
+& \leq \left|\int_a^q f(x)\ \mathrm{d}x- \int_a^b f(x) \mathrm{d}x\right| + \left|\int_a^b f(x)\ \mathrm{d}x- \int_a^p f(x) \mathrm{d}x\right| \\
+& < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+\end{align*}
+
+$\impliedby$: Now, assume that the improper integral is Cauchy, we'll show that it converges. Take $\varepsilon>0$. Them, create a sequence $(t_n)_{n=1}^\infty \subseteq (a,b)$ such that $t_n$ is monotonically increasing and $t_n \to b$.\footnote{If $b<\infty$, try something like $b-\frac1n$ just make sure you start at high enough $n$ so the whole sequence is contained in $(a,b)$. If $b=\infty$, then simply take some tail of the natural integers.} Then, for each $n$, let
+\[s_n = \int_a^{t_n} f(x)\ \mathrm{d}x.\]
+Observe that $(s_n)_{n=1}^\infty$ is a Cauchy sequence in the reals and thus it converges. So, let $S\in \R$ be such that $s_n\to S$. We'll argue that
+\[\lim_{c\to b}\int_a^c f(x)\ \mathrm{d}x = S.\]
+Now, for our given $\varepsilon>0$, by the fact that the improper integral is Cauchy, we know that there exists some $r\in(a,b)$ such that, for all $p,q\in(r,b)$ where $p<q$, we have
+\[\left|\int_a^q f(x)\ \mathrm{d}x- \int_a^p f(x) \mathrm{d}x\right| = \left|\int_p^q f(x)\ \mathrm{d}x\right| < \frac{\varepsilon}{2}.\]
+Further, since $s_n\to S$, we know that there exists some $N$ such that, for all $n\geq N$, we have $|s_n-S|<\frac{\varepsilon}{2}$. Now, let $M = \max\{r, t_N\}$ and notice that $M\in(a,b)$. Let $c\in(M,b)$ and take $t_n$ be such that $t_n\in(c,b)$. Observe that, as $t_n\uparrow b$, such a $t_n$ indeed exists and notice that $t_n > t_N$ and hence $n>N$ by the monotonicity of the sequence $(t_n)_{n=1}^\infty$. We then have the follow calculation:
+\begin{align*}
+\left|\int_a^c f(x)\ \mathrm{d}x -S\right| & \leq \left|\int_a^c f(x)\ \mathrm{d}x -\int_a^{t_n}f(x)\ \mathrm{d}x\right|+\left|\int_a^{t_n}f(x)\ \mathrm{d}x -S\right| \\
+& = \left|\int_c^{t_n} f(x) \ \mathrm{d}x\right| + |s_n-S| \\
+& < \frac{\varepsilon}{2} +\frac{\varepsilon}{2} = \varepsilon.
+\end{align*}
+Note that the last inequality is due to the fact that $t_n,c\in(r,b)$ since $t_n>c>M$ (using the Cauchy property) and the fact that $n>N$ (using the fact that $s_n\to S$).
+\end{proof}
+
+\textbf{Subset of Countable is Countable Proof.}
+
+\begin{proof}
+Let $X$ be a countable set and let $Y\subseteq X$. If $X$ is finite, then we're done. Suppose $X$ is denumerable, then we can write $X = (x_n)_{n=0}^\infty$ as an infinite sequence of points. Again, if $Y$ is finite, then we're done. On the other hand, suppose $Y$ is also infinite, we want to show that it's denumerable. We define a sequence of natural numbers so that $n_0 \coloneqq  \min\{n : x_n\in Y\}$, which exists by the Well-Ordering Principle. For $k\geq 1$, we define $n_k = \min\{n : x_n\in Y \backslash \{x_{n_0},\ldots,x_{n_{k-1}}\} \}$, which also exists by the Well-Ordering Principle. Since $Y$ is infinite, this can be done for all $k\in \N$ and we get $Y= (x_{n_k})_{k=0}^\infty$. Now, let $f:\N\to Y$ be such that, for each $k\in \N$, we have $f(k) = x_{n_k}$. Then, $f$ is a bijection from $\N$ to $Y$, which means that $Y$ is denumerable and thus countable.
+\end{proof}
+
+\textbf{$\N\times\N$ is Countable Proof.}
+
+\begin{proof}
+Consider the mapping $f:\N\times \N\to \{2^m3^n : m\in \N, n\in\N\}$ such that, for $(m,n)\in \N\times\N$, we have $f(m,n) = 2^m3^n$. By the unique prime factorization theorem, $f$ is an injection and thus it is bijective by construction. Now, the set $\{2^m3^n : m\in \N, n\in\N\} \subseteq \N$ is denumerable because it is a subset of a denumerable set (by part (a)). Hence, as $\N\times \N$ is bijective to a denumerable set, it is also denumerable and thus countable.
+\end{proof}
+
+\textbf{Surjective Countable Proof.}
+
+\begin{proof}
+Let $X$ be a countable set and $g:X\to Y$ be a surjection, we want to show that $Y$ is also countable. First, write $X = (x_n)_{n=0}^N$ where $N \in \N \cup \{\infty\}$. Then, for each $y\in Y$, define
+\[N(y) = \min\{n\in \N : g(x_n)=y\}.\]
+Note that, for each $y\in Y$, the set $\{n\in \N : g(x_n)=y\}\neq \emptyset$ as $g$ is a surjection and the minimum exists by the Well-Ordering Principle. Now, for each $y\in Y$, we have $g(x_{N(y)}) = y$. Let
+\[X' = \bigcup_{y\in Y} x_{N(y)}\subseteq X\]
+and consider the function $g\big|_{X'}:X'\to Y$. Now, $g$ is a bijection between $X'$ and $Y$. Note that $X'$ is countable by part (a). Thus, if $X$ is finite, then so is $Y$. If $X$ is denumerable, we have that $Y$ is denumerable as well.
+\end{proof}
+
+\textbf{Countable Union of Countable is Countable Proof.}
+
+\begin{proof}
+Let $X= \bigcup_{n=0}^\infty X_n$ where, for each $n$, we have $X_n$ is a countable set. We want to show that $X$ is countable. Suppose $X\neq \emptyset$, then first fix some $x^*\in X$. Since each $X_n$ is countable, we can write them as $X_n = \left(x_n^{(m)}\right)_{m=0}^{M_n}$ where $M_n\in \N\cup\{\infty\}$ for each $n$. Note that $X$ can be written as
+\[X=\bigcup_{n=0}^\infty\left(\bigcup_{m=0}^{M_n} \left\{x_n^{(m)}\right\}\right)\] 
+Then, define a function $f:\N\times\N\to X$ such that
+\[f(m,n) =
+\begin{cases}
+x_n^{(m)} & m\leq M_n \\
+x^*  & \text{else.}
+\end{cases}
+\]
+Then, $f$ is a surjection. From part (b), we know that $\N\times\N$ is countable and thus, by part (c), we have that $X$ is countable as well.
+\end{proof}
+
+\newpage
+\begin{thm}
+Let $f,g \colon [a,b)\to \R$ and consider the improper integral $\int_a^b f(x)g(x)\ \mathrm{d}x$. Suppose that
+\begin{enumerate}
+	\item $f$ is continuous on $[a,b)$,
+	\item There exists $M>0$ such that, for all $c\in(a,b)$, we have
+	\[\left|\int_a^c f(x)\ \mathrm{d}x\right|\leq M,\]
+	\item $g$ has a continuous derivative over $[a,b)$, is monotonically decreasing, and $\lim_{x\to b}g(x) = 0$,
+\end{enumerate}
+then $\int_a^b f(x)g(x)\ \mathrm{d}x$ is convergent.
+\end{thm}
+
+
+
+\begin{proof}
+We want to show that
+\[\lim_{c\to b} \int_a^c f(x)g(x)\ \mathrm{d}x \in \R.\]
+Define a function $F \colon [a,b)\to\R$ such that, for all $x\in[a,b)$, we have
+\[F(x) = \int_{a}^{x} f(t) \ \mathrm{d}t.\]
+Observe that $|F(x)|<M$ for all $x\in(a,b)$ by (2) of our hypothesis. Since $f$ is continuous on $[a,b)$, by the Fundamental Theorem of Calculus, we have $F'(x)=f(x)$ on $[a,b)$. Thus, $F$ is also continuous. Then, consider integration by parts with $u=g$ and $v'=f$. For all $c\in[a,b)$, we have
+\[\int_{a}^{c} f(x)g(x) \ \mathrm{d}x = F(x)g(x)\Big|_a^c - \int_{a}^{c} g'(x)F(x) \ \mathrm{d}x = F(c)g(c) - \int_{a}^{c} g'(x)F(x) \ \mathrm{d}x\]
+since $F(a) = \int_a^a f(x)\ \mathrm{d}x = 0$. Notice that, because $g'$ is continuous by part (3) of our hypothesis, we know that $g'(x)F(x)$ is also continuous and thus Riemann integrable on $[a,c]$. 
+
+We first show that $\lim_{c\to b} F(c)g(c) = 0$. Let $\varepsilon>0$, then there exists $\delta>0$ such that, for all $x\in (b-\delta,b)$, we have $|g(c)|<\frac{\varepsilon}{M}$. Then, for such $\delta>0$, for all $x\in(b-\delta,b)$, we have
+\[|F(x)g(x)-0|\leq M|g(x)| <\varepsilon.\]
+Thus, we indeed have $\lim_{c\to b} F(c)g(c) = 0$.
+
+Now, we will show that
+\[\lim_{c\to b}\int_{a}^{c} g'(x)F(x) \ \mathrm{d}x \in \R,\]
+which would complete our proof. We will show that the improper integral converges absolutely, that is: 
+\[\lim_{c\to b}\int_{a}^{c} |g'(x)F(x)|\ \mathrm{d}x < \infty.\]
+Consider the following for $c\in(a,b)$
+\[\int_{a}^{c} |g'(x)F(x)|\ \mathrm{d}x \leq M \int_a^c |g'(x)|\ \mathrm{d}x = -M\int_a^c g'(x)\ \mathrm{d}x = M(g(a)-g(c))\]
+because $g'(x)\leq 0$ for all $x$. We then have
+\[\lim_{c\to b} \int_{a}^{c} |g'(x)F(x)|\ \mathrm{d}x\leq \lim_{c\to b} M(g(a)-g(c)) = M\cdot g(a) <\infty. \qedhere\]
+\end{proof}
+
+\begin{proposition}
+Consider the infinite series $\sum_{n=1}^\infty a_n$ where $a_n\geq 0$ for all $n$, then we have
+\[\sum_{n=1}^\infty a_n = \sum_{n\in S} f(n)\]
+where $S = \{1,2,\ldots\}$ and $f(n)=a_n$ for all $n\in S$.
+\end{proposition}
+
+\begin{proof}
+Consider the set
+\[B \coloneqq \left\{\sum_{n\in F}f(n): F\subseteq S;\ F\text{ is finite}\right\}.\]
+Then, we have $\sum_{n\in S} f(n) = \sup(B)$. Observe that, for all $b\in B$, the element $b$ is simply a finite sum of the form $b = \sum_{k=1}^K a_{n_k}$. Hence, for all $b\in B$, we have $\sum_{n=1}^\infty a_n\geq b$ and thus $\sum_{n=1}^\infty a_n\geq \sup(B) = \sum_{n\in S} f(n)$.
+
+For the other inequality direction, consider two cases. Suppose that $\sum_{n=1}^{\infty} a_n <\infty$ (notice the sequence of partial sums always have a limit, which might be infinity, because it is a monotone sequence). Let $\varepsilon>0$, we will show that there exists some $b\in B$ such that $b > \sum_{n=1}^\infty a_n - \varepsilon$. Since $\sum_{n=1}^\infty a_n$ converges, its sequence of partial sums converge to $\sum_{n=1}^\infty a_n$. Thus, there exists $N$ such that, for all $n\geq N$, we have
+\[\sum_{n=1}^\infty a_n-\sum_{n=1}^N a_n < \varepsilon \iff \sum_{n=1}^N a_n > \sum_{n=1}^\infty a_n-\varepsilon.\]
+Let $F = \{1,\ldots,N\}$, then we let $b=\sum_{n=1}^N a_n= \sum_{n\in F} f(n)\in B$ and $b>\sum_{n=1}^\infty a_n-\varepsilon$. Since the choice of $\varepsilon>0$ is arbitrarily, we have $\sum_{n\in S} f(n)=\sup(B)\geq \sum_{n=1}^\infty a_n$.
+
+Suppose that $\sum_{n=1}^\infty a_n = \infty$, we will show that $\sup(B) = \infty$. Let $M>0$, then we know that there exists some $N$ such that, for all $n\geq N$, we have
+\[\sum_{n=1}^N a_n > M.\]
+Let $F= \{1,\ldots,N\}$ and set $b = \sum_{n=1}^N a_n  = \sum_{n\in F}f(n)\in B$, we then have $b>M$. Since the choice of $M>0$ was arbitrary, we indeed have $\sup(B)=\infty$.
+\end{proof}
+
+\begin{thm}
+Let $X,Y$ be sets and $f \colon X\times Y \to [0,\infty]$, then we have
+\[\sum_{X\times Y}f(x,y) = \sum_X \left(\sum_Y f(x,y)\right) = \sum_Y \left(\sum_X f(x,y)\right).\]
+\end{thm}
+
+\begin{proof}
+We will show that $\sum_{X\times Y}f(x,y) = \sum_X \left(\sum_Y f(x,y)\right)$ and the theorem follows from symmetry. We first show that $\sum_{X\times Y}f(x,y) \leq \sum_X \left(\sum_Y f(x,y)\right)$. Let $A\subseteq X\times Y$ be a finite set, we will show that
+\[\sum_{A}f(x,y)\leq \sum_X \left(\sum_Y f(x,y)\right).\]
+First consider the projection mappings $\pi_X \colon X\times Y \to X$ such that $\pi_X(x,y)=x$ and $\pi_Y \colon X\times Y \to Y$ such that $\pi_Y(x,y) = y$. Let $E = \pi_x(A)$ and $F = \pi_y(A)$, note that $E\subseteq X$ and $F\subseteq Y$ are both finite and $A\subseteq E\times F$. Then, we have
+\[\sum_A f(x,y) \leq \sum_{E\times F} f(x,y) = \sum_E \left(\sum_F f(x,y)\right) \leq \sum_X \left(\sum_Y f(x,y)\right).\]
+once we expand the second term.
+
+Now, we want to show that $\sum_{X\times Y}f(x,y) \geq \sum_X \left(\sum_Y f(x,y)\right)$. We will show that, for all finite sets $E\subseteq X$, we have
+\[\sum_E \left(\sum_Y f(x,y)\right)\leq \sum_{X\times Y}f(x,y).\]
+Let $E\subseteq X$ be a finite subset. We consider two cases. First, assume that $\sum_E \left(\sum_Y f(x,y)\right)<\infty$. Take $\varepsilon>0$, we will show that there exists a finite set $K\subseteq X\times Y$ such that
+\[\sum_K f(x,y) \geq \sum_E \left(\sum_Y f(x,y)\right) - \varepsilon.\]
+Since $E$ is finite, we can write $E = \{x_1, x_2, \ldots, x_k\}$. Now, since $\sum_E \left(\sum_Y f(x,y)\right)<\infty$, then for all $i\in\{1,\ldots,k\}$, we have $\sum_Y f(x_i,y) <\infty$. Now, by the definition of supremum, for each $i\in\{1,\ldots,k\}$, we know that there exists some finite set $F_i\subseteq Y$ such that
+\[\sum_{F_i} f(x_i,y) > \sum_Y f(x_i,y) - \frac{\varepsilon}{k}.\]
+Now, let $F = \bigcup_{i=1}^k F_i$, which is also a finite set. Then, for all $i\in\{1,\ldots,k\}$, we have
+\begin{equation} \label{eqn:SumSwapProofIneq}
+\sum_{F} f(x_i,y) \geq \sum_{F_i} f(x_i,y) > \sum_Y f(x_i,y) - \frac{\varepsilon}{k}
+\end{equation}
+Let $K = E\times F$. Notice that $K\subseteq X\times Y$ is a finite set and we have
+\begin{align*}
+\sum_K f(x,y) & = \sum_{E\times F} f(x,y) \\
+& = \sum_E \left(\sum_F f(x,y)\right) \qquad \text{by expanding the finite sum} \\
+& = \sum_{i=1}^k \left(\sum_F f(x_i,y)\right) \qquad \text{by the construction of }E \\
+& \geq \sum_{i=1}^k \left(\sum_Y f(x_i,y) - \frac{\varepsilon}{k}\right) \qquad \text{by \Cref{eqn:SumSwapProofIneq}} \\
+&  = \sum_{i=1}^k \left(\sum_Y f(x_i,y)\right) - k \left( \frac{\varepsilon}{k} \right) \qquad \text{splitting the finite sum} \\
+& = \sum_E \left(\sum_Y f(x,y)\right) -\varepsilon.
+\end{align*}
+Hence, we have $\sum_E \left(\sum_Y f(x,y)\right)\leq \sum_{X\times Y}f(x,y)$ if the left hand side is finite.
+
+Now, suppose $\sum_E \left(\sum_Y f(x,y)\right) = \infty$. Then, there must exist some $x_0\in E$ such that $\sum_Y f(x_0,y) = \infty$. We then have
+\[\sum_{X\times Y}f(x,y) \geq \sum_{\{x_0\}\times Y} f(x,y) = \sum_Y f(x_0,y) = \infty.\]
+Hence, we have $\sum_{X\times Y}f(x,y) = \infty$.
+\end{proof}
+
+\end{document}
